@@ -1,1 +1,21 @@
+name: Docker image build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKERTOKEN }} | docker login -u "your-dockerhub-username" --password-stdin
+
+      - name: Build Docker Image
+        run: docker build -t your-dockerhub-username/your-image-name:v0.1 .
+
+      - name: Push Docker Image
+        run: docker push your-dockerhub-username/your-image-name:v0.1
 
