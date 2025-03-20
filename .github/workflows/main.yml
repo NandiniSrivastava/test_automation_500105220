@@ -1,5 +1,9 @@
 name: API Tests
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   test:
@@ -16,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install python3 pipenv -y
+          sudo apt install python3-pip pipenv -y
           pipenv install fastapi uvicorn pytest requests
 
       - name: Start FastAPI server
@@ -25,12 +29,7 @@ jobs:
           PYTHONUNBUFFERED: 1
 
       - name: Wait for server to be ready
-        run: |
-          for i in {1..10}; do
-            curl -s http://127.0.0.1:8000/ && break
-            echo "Waiting for server..."
-            sleep 2
-          done
+        run: sleep 5  # Ensures the server is up before running tests
 
       - name: Run tests
         run: pipenv run pytest automation_test_pytest.py
